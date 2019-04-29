@@ -2,11 +2,13 @@
 Some codes from https://github.com/Newmu/dcgan_code
 """
 from __future__ import division
+import os
 import math
 import pprint
 import scipy.misc
 import numpy as np
 import copy
+import matplotlib.pyplot as plt
 
 pp = pprint.PrettyPrinter()
 
@@ -44,7 +46,7 @@ def load_test_data(image_path, fine_size=256):
     img = img/127.5 - 1
     return img
 
-def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
+def load_train_data_backup(image_path, load_size=286, fine_size=256, is_testing=False):
     img_A = imread(image_path[0])
     img_B = imread(image_path[1])
     mask_A = np.load('datasets/personReid/trainA_mask/'+image_path[0].split('/')[-1].split('.')[0]+'.npy')
@@ -127,3 +129,79 @@ def transform(image, npx=64, is_crop=True, resize_w=64):
 
 def inverse_transform(images):
     return (images+1.)/2.
+
+def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
+    img_A = imread(image_path[0])
+    img_B = imread(image_path[1])
+
+    img_A_name = os.path.basename(image_path[0])
+    img_B_name = os.path.basename(image_path[1])
+
+    print('IMG_A', type(img_A), img_A.dtype, img_A.shape, np.max(img_A), np.min(img_A))
+    print('IMG_B', type(img_B), img_B.dtype, img_B.shape, np.max(img_B), np.min(img_B))
+
+    mask_A = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_A_name)
+    mask_B = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_B_name)
+
+    mask_A = imread(mask_A, is_grayscale=True)
+    mask_B = imread(mask_B, is_grayscale=True)
+
+    print('mask_A', type(mask_A), mask_A.dtype, mask_A.shape)
+    print('mask_B', type(mask_B), mask_B.dtype, mask_B.shape)
+
+    if not is_testing:
+        img_A = scipy.misc.imresize(img_A, [load_size, load_size])
+        img_B = scipy.misc.imresize(img_B, [load_size, load_size])
+
+        mask_A = scipy.misc.imresize(mask_A, [load_size, load_size])
+        mask_B = scipy.misc.imresize(mask_B, [load_size, load_size])
+
+        h1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
+        w1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
+        img_A = img_A[h1:h1+fine_size, w1:w1+fine_size]
+        img_B = img_B[h1:h1+fine_size, w1:w1+fine_size]
+
+        mask_A = mask_A[h1:h1+fine_size, w1:w1+fine_size]
+        mask_B = mask_B[h1:h1+fine_size, w1:w1+fine_size]
+
+        if np.random.random() > 0.5:
+            img_A = np.fliplr(img_A)
+            img_B = np.fliplr(img_B)
+            mask_A = np.fliplr(mask_A)
+            mask_B = np.fliplr(mask_B)
+    else:
+        img_A = scipy.misc.imresize(img_A, [fine_size, fine_size])
+        img_B = scipy.misc.imresize(img_B, [fine_size, fine_size])
+        mask_A = scipy.misc.imresize(mask_A, [load_size, load_size])
+        mask_B = scipy.misc.imresize(mask_B, [load_size, load_size])
+
+    mask_m = np.max(mask_A)*0.18
+    mask_A = np.array(mask_A > mask_m, dtype=np.float)
+    mask_m = np.max(mask_B)*0.18
+    mask_B = np.array(mask_B > mask_m, dtype=np.float)
+
+    img_A = img_A/127.5 - 1.
+    img_B = img_B/127.5 - 1.
+
+    print('img_A', type(img_A), img_A.dtype, img_A.shape, np.max(img_A), np.min(img_A))
+    print('img_B', type(img_B), img_B.dtype, img_B.shape, np.max(img_B), np.min(img_B))
+    print('mask_A', type(mask_A), mask_A.dtype, mask_A.shape, np.max(mask_A), np.min(mask_A))
+    print('mask_B', type(mask_B), mask_B.dtype, mask_B.shape, np.max(mask_B), np.min(mask_B))
+
+    img_AB = np.concatenate((img_A, img_B), axis=2)
+    mask_A = mask_A.reshape(fine_size, fine_size, 1)
+    mask_B = mask_B.reshape(fine_size, fine_size, 1)
+    img_AB = np.concatenate((img_AB, mask_A), axis=2)
+    img_AB = np.concatenate((img_AB, mask_B), axis=2)
+
+    # img_AB shape: (fine_size, fine_size, input_c_dim + output_c_dim+2)
+    return img_AB
+
+
+if __name__=='__main__':
+    image_path = []
+    image_path.append('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/imgs_dir/process_0__DengXian_12_1_1556510481_4.jpg')
+    image_path.append('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/imgs_dir/process_0__DengXian_23_1_1556510479_3.jpg')
+    load_train_data_debug(image_path, load_size=286, fine_size=256, is_testing=False)
+
+
