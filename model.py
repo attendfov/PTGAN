@@ -1,9 +1,9 @@
 from __future__ import division
 import os
 import time
+import numpy as np
 from glob import glob
 import tensorflow as tf
-import numpy as np
 from collections import namedtuple
 
 from module import *
