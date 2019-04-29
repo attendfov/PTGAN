@@ -143,11 +143,15 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
     mask_A = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_A_name)
     mask_B = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_B_name)
 
-    mask_A = imread(mask_A, is_grayscale=True)
-    mask_B = imread(mask_B, is_grayscale=True)
+    if os.path.isfile(mask_A):
+        mask_A = imread(mask_A, is_grayscale=True)
+    else:
+        mask_A = np.zeros((load_size, load_size), dtype=np.float)
 
-    print('mask_A', type(mask_A), mask_A.dtype, mask_A.shape)
-    print('mask_B', type(mask_B), mask_B.dtype, mask_B.shape)
+    if os.path.isfile(mask_B):
+        mask_B = imread(mask_B, is_grayscale=True)
+    else:
+        mask_B = np.zeros((load_size, load_size), dtype=np.float)
 
     if not is_testing:
         img_A = scipy.misc.imresize(img_A, [load_size, load_size])
@@ -202,6 +206,6 @@ if __name__=='__main__':
     image_path = []
     image_path.append('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/imgs_dir/process_0__DengXian_12_1_1556510481_4.jpg')
     image_path.append('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/imgs_dir/process_0__DengXian_23_1_1556510479_3.jpg')
-    load_train_data_debug(image_path, load_size=286, fine_size=256, is_testing=False)
+    load_train_data(image_path, load_size=286, fine_size=256, is_testing=False)
 
 
