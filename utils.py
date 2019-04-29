@@ -140,8 +140,15 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
     print('IMG_A', type(img_A), img_A.dtype, img_A.shape, np.max(img_A), np.min(img_A))
     print('IMG_B', type(img_B), img_B.dtype, img_B.shape, np.max(img_B), np.min(img_B))
 
-    mask_A = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_A_name)
-    mask_B = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_B_name)
+    mask_A_dir = './datasets/{}/'.format('t2t_masks' + '/trainA')
+    mask_B_dir = './datasets/{}/'.format('t2t_masks' + '/trainB')
+
+    mask_A = os.path.join(mask_A_dir, img_A_name)
+    mask_B = os.path.join(mask_B_dir, img_B_name)
+
+
+    #mask_A = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_A_name)
+    #mask_B = os.path.join('/Users/junhuang.hj/Desktop/code_paper/code/data_gene/src/mask_dir', img_B_name)
 
     if os.path.isfile(mask_A):
         mask_A = imread(mask_A, is_grayscale=True)
