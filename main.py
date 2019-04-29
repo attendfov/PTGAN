@@ -5,8 +5,8 @@ tf.set_random_seed(19)
 from model import cyclegan
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--dataset_dir', dest='dataset_dir', default='horse2zebra', help='path of the dataset')
-parser.add_argument('--mask_dir', dest='mask_dir', default='mask_personReid', help='path of the dataset')
+parser.add_argument('--dataset_dir', dest='dataset_dir', default='t2t_images', help='path of the dataset')
+parser.add_argument('--mask_dir', dest='mask_dir', default='t2t_masks', help='path of the dataset')
 parser.add_argument('--epoch', dest='epoch', type=int, default=200, help='# of epoch')
 parser.add_argument('--epoch_step', dest='epoch_step', type=int, default=100, help='# of epoch to decay lr')
 parser.add_argument('--batch_size', dest='batch_size', type=int, default=1, help='# images in batch')
