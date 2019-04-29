@@ -64,15 +64,14 @@ class cyclegan(object):
 
         self.g_loss_b2a = self.criterionGAN(self.DA_fake, tf.ones_like(self.DA_fake)) \
             + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
-            + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_) 
-
+            + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_)
 
         self.g_loss = self.criterionGAN(self.DA_fake, tf.ones_like(self.DA_fake)) \
             + self.criterionGAN(self.DB_fake, tf.ones_like(self.DB_fake)) \
             + self.L1_lambda * abs_criterion(self.real_A, self.fake_A_) \
             + self.L1_lambda * abs_criterion(self.real_B, self.fake_B_) \
-	    + self.L2_lambda * mae_mask_criterion(self.real_A, self.fake_B, self.mask_A) \
-	    + self.L2_lambda * mae_mask_criterion(self.real_B, self.fake_A, self.mask_B)
+            + self.L2_lambda * mae_mask_criterion(self.real_A, self.fake_B, self.mask_A)\
+            + self.L2_lambda * mae_mask_criterion(self.real_B, self.fake_A, self.mask_B)
 
         self.fake_A_sample = tf.placeholder(tf.float32,
                                             [None, self.image_size, self.image_size,
@@ -145,8 +144,8 @@ class cyclegan(object):
             print(" [!] Load failed...")
 
         for epoch in range(args.epoch):
-            dataA = glob('./datasets/{}/*.*'.format(self.dataset_dir + '/trainA'))
-            dataB = glob('./datasets/{}/*.*'.format(self.dataset_dir + '/trainB'))
+            dataA = glob('./datasets/{}/*.jpg'.format(self.dataset_dir + '/trainA'))
+            dataB = glob('./datasets/{}/*.jpg'.format(self.dataset_dir + '/trainB'))
     
             np.random.shuffle(dataA)
             np.random.shuffle(dataB)
