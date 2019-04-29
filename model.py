@@ -18,7 +18,7 @@ class cyclegan(object):
         self.input_c_dim = args.input_nc
         self.output_c_dim = args.output_nc
         self.L1_lambda = args.L1_lambda
-	self.L2_lambda = args.L2_lambda
+        self.L2_lambda = args.L2_lambda
         self.dataset_dir = args.dataset_dir
 
         self.discriminator = discriminator
@@ -49,7 +49,7 @@ class cyclegan(object):
 
         self.real_A = self.real_data[:, :, :, :self.input_c_dim]
         self.real_B = self.real_data[:, :, :, self.input_c_dim:self.input_c_dim + self.output_c_dim]
-	    self.mask_A = self.real_data[:,:,:,self.input_c_dim+self.output_c_dim:self.input_c_dim+self.output_c_dim+1]
+        self.mask_A = self.real_data[:,:,:,self.input_c_dim+self.output_c_dim:self.input_c_dim+self.output_c_dim+1]
         self.mask_B = self.real_data[:,:,:,self.input_c_dim+self.output_c_dim+1:self.input_c_dim+self.output_c_dim+2]
         self.fake_B = self.generator(self.real_A, self.options, False, name="generatorA2B")
         self.fake_A_ = self.generator(self.fake_B, self.options, False, name="generatorB2A")
@@ -165,7 +165,7 @@ class cyclegan(object):
                     feed_dict={self.real_data: batch_images, self.lr: lr})
                 self.writer.add_summary(summary_str, counter)
                 [fake_A, fake_B] = self.pool([fake_A, fake_B])
-		    print self.mask_A.shape
+                print(self.mask_A.shape)
 
                 # Update D network
                 _, summary_str = self.sess.run(
