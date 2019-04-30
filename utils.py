@@ -134,6 +134,31 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
     img_A = imread(image_path[0])
     img_B = imread(image_path[1])
 
+    img_B_H, img_B_W = img_B.shape[:2]
+    img_B_centx = img_B_W//2
+    img_B_centy = img_B_H//2
+
+    img_B_minx = max(img_B_centx-256, (load_size//2)+1)
+    img_B_maxx = min(img_B_centx+256, img_B_W-(load_size//2)-1)
+
+    img_B_miny = max(img_B_centy-256, load_size//2)
+    img_B_maxy = min(img_B_centy+256, img_B_H=load_size//2)
+
+    if img_B_minx < img_B_maxx:
+        img_B_centx = random.randint(img_B_minx, img_B_maxx)
+    else:
+        img_B_centx = (img_B_minx+img_B_maxx)//2
+    if img_B_miny < img_B_maxy:
+        img_B_centy = random.randint(img_B_miny, img_B_maxy)
+    else:
+        img_B_centy = (img_B_miny+img_B_maxy)//2
+
+    xmin = max(0, img_B_centx-(load_size//2))
+    ymin = max(0, img_B_centy-(load_size//2))
+    xmax = min(img_B_W, xmin+load_size)
+    ymax = min(img_B_H, ymin+load_size)
+    img_B = img_B[ymin:ymax, xmin:xmax]
+
     img_A_name = os.path.basename(image_path[0])
     img_B_name = os.path.basename(image_path[1])
 
