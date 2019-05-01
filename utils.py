@@ -208,8 +208,8 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
     else:
         img_A = scipy.misc.imresize(img_A, [fine_size, fine_size])
         img_B = scipy.misc.imresize(img_B, [fine_size, fine_size])
-        mask_A = scipy.misc.imresize(mask_A, [load_size, load_size])
-        mask_B = scipy.misc.imresize(mask_B, [load_size, load_size])
+        mask_A = scipy.misc.imresize(mask_A, [fine_size, fine_size])
+        mask_B = scipy.misc.imresize(mask_B, [fine_size, fine_size])
 
     mask_m = np.max(mask_A)*0.18
     mask_A = np.array(mask_A > mask_m, dtype=np.float)
